@@ -1,0 +1,19 @@
+{
+  "name": "keeper-app-db",
+  "version": "1.0.0",
+  "description": "\"API app to store and get notes from keeper app v2\"",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Javier Leon",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "lodash": "^4.17.21",
+    "mongoose": "^7.2.1"
+  }
+}
