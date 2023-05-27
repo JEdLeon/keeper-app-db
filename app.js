@@ -19,7 +19,7 @@ async function mongoConnect() {
 mongoConnect().catch(error => { console.log(error) })
 
 const noteSchema = new mongoose.Schema({
-    id: Number,
+    id: String,
     title: String,
     content: String
 });
@@ -57,10 +57,7 @@ app.route("/notes")
                 console.log("this error in GET /notes...", error);
             })
             .finally(() => {
-                noteList.map((note, index) => {
-                    res.write(`¤${index} »»» ${note}<br>`)
-                })
-                res.send();
+                res.send(noteList);
             });
     })
     .post((req, res) => {
@@ -78,16 +75,12 @@ app.route("/notes")
             });
     })
     .delete((req, res) => {
-        let count = 0;
         Note.deleteMany({})
-            .then(result => {
-                count = result.deletedCount;
-            })
             .catch(error => {
                 console.log("This error in DELETE /notes...", error);
             })
             .finally(() => {
-                res.send(`<h2>${count} documents were deleted</h2>`)
+                res.redirect("/notes");
             });
     });
 
@@ -104,9 +97,7 @@ app.route("/notes/:noteID")
                 console.log("This error in GET /notes/:noteID...", error);
             })
             .finally(() => {
-                res.write(`<h1>¤${note.id} »»»» ${note.title}</h1>`);
-                res.write(`<p>${note.content}</p>`);
-                res.send();
+                res.send(note);
             });
     })
     .put((req, res) => {
