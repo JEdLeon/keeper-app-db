@@ -161,3 +161,22 @@ app.route("/notes/:noteID")
                     });
             });
     });
+
+app.route("/maxID")
+    .get((req, res) => {
+        let maxID = 0;
+        Note.find({})
+            .then(docs => {
+                for (let doc of docs) {
+                    if (doc.id > maxID) {
+                        maxID = doc.id
+                    }
+                }
+            })
+            .catch(error => {
+                console.log("This error in GET /maxID...", error);
+            })
+            .finally(() => {
+                res.json({ startingID: maxID });
+            });
+    }); 
