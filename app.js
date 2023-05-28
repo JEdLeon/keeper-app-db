@@ -2,11 +2,15 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const _ = require("lodash");
+const morgan = require("morgan");
+const cors = require("cors");
 
 //app config
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(morgan("combined"));
+app.use(cors());
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
