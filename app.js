@@ -57,9 +57,8 @@ app.route("/notes")
                 console.log("this error in GET /notes...", error);
             })
             .finally(() => {
-                noteList.map((note, index) => {
-                    res.write(`¤${index} »»» ${note}<br>`)
-                })
+                const noteListJSON = JSON.stringify(noteList);
+                res.write(noteListJSON.toString());
                 res.send();
             });
     })
@@ -78,16 +77,12 @@ app.route("/notes")
             });
     })
     .delete((req, res) => {
-        let count = 0;
         Note.deleteMany({})
-            .then(result => {
-                count = result.deletedCount;
-            })
             .catch(error => {
                 console.log("This error in DELETE /notes...", error);
             })
             .finally(() => {
-                res.send(`<h2>${count} documents were deleted</h2>`)
+                res.redirect("/notes");
             });
     });
 
@@ -104,8 +99,8 @@ app.route("/notes/:noteID")
                 console.log("This error in GET /notes/:noteID...", error);
             })
             .finally(() => {
-                res.write(`<h1>¤${note.id} »»»» ${note.title}</h1>`);
-                res.write(`<p>${note.content}</p>`);
+                const noteJSON = JSON.stringify(note);
+                res.write(noteJSON.toString());
                 res.send();
             });
     })
