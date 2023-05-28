@@ -51,17 +51,21 @@ app.route("/notes")
     .get((req, res) => {
         //res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
         noteList = [];
+        let maxID = 0;
         Note.find({})
             .then(docs => {
                 for (let doc of docs) {
                     noteList.push(doc);
+                    if (doc.id > maxID) {
+                        maxID = doc.id;
+                    }
                 }
             })
             .catch(error => {
                 console.log("this error in GET /notes...", error);
             })
             .finally(() => {
-                res.json(noteList);
+                res.json({ notes: noteList, startingID: maxID + 1 });
             });
     })
     .post((req, res) => {
@@ -161,22 +165,3 @@ app.route("/notes/:noteID")
                     });
             });
     });
-
-app.route("/maxID")
-    .get((req, res) => {
-        let maxID = 0;
-        Note.find({})
-            .then(docs => {
-                for (let doc of docs) {
-                    if (doc.id > maxID) {
-                        maxID = doc.id
-                    }
-                }
-            })
-            .catch(error => {
-                console.log("This error in GET /maxID...", error);
-            })
-            .finally(() => {
-                res.json({ startingID: maxID });
-            });
-    }); 
