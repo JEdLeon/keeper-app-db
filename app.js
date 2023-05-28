@@ -45,7 +45,7 @@ app.get("/", (req, res) => { res.redirect("/notes") })
 
 app.route("/notes")
     .get((req, res) => {
-        res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
+        //res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
         noteList = [];
         Note.find({})
             .then(docs => {
@@ -57,9 +57,7 @@ app.route("/notes")
                 console.log("this error in GET /notes...", error);
             })
             .finally(() => {
-                const noteListJSON = JSON.stringify(noteList);
-                res.write(noteListJSON.toString());
-                res.send();
+                res.json(noteList);
             });
     })
     .post((req, res) => {
@@ -88,7 +86,7 @@ app.route("/notes")
 
 app.route("/notes/:noteID")
     .get((req, res) => {
-        res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
+        //res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
         const noteID = req.params.noteID;
         let note = {};
         Note.find({})
@@ -99,9 +97,7 @@ app.route("/notes/:noteID")
                 console.log("This error in GET /notes/:noteID...", error);
             })
             .finally(() => {
-                const noteJSON = JSON.stringify(note);
-                res.write(noteJSON.toString());
-                res.send();
+                res.json(note);
             });
     })
     .put((req, res) => {
