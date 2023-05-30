@@ -45,27 +45,34 @@ function queryDoc(docs, noteID) {
     return returnDoc;
 }
 
+async function getNotes() {
+    noteList = [];
+    let maxID = 0;
+    try {
+        const query = await Note.find({});
+        for (let doc of query) {
+            noteList.push(doc);
+            if (doc.id > maxID) {
+                maxID = doc.id;
+            }
+        }
+        return ({ notes: noteList, startingID: maxID + 1 });
+    } catch (error) {
+        console.log("this error in GET /notes...", error);
+    }
+}
+
 app.get("/", (req, res) => { res.redirect("/notes") })
 
 app.route("/notes")
     .get((req, res) => {
         //res.writeHead(200, { "Content-Type": "text/html;charset=utf-8" });
-        noteList = [];
-        let maxID = 0;
-        Note.find({})
-            .then(docs => {
-                for (let doc of docs) {
-                    noteList.push(doc);
-                    if (doc.id > maxID) {
-                        maxID = doc.id;
-                    }
-                }
+        getNotes()
+            .then(result => {
+                res.json(result);
             })
             .catch(error => {
-                console.log("this error in GET /notes...", error);
-            })
-            .finally(() => {
-                res.json({ notes: noteList, startingID: maxID + 1 });
+                res.redirect("/notes");
             });
     })
     .post((req, res) => {
@@ -79,7 +86,13 @@ app.route("/notes")
                 console.log("This error in POST /notes...", error);
             })
             .finally(() => {
-                res.redirect("/notes");
+                getNotes()
+                    .then(result => {
+                        res.json(result);
+                    })
+                    .catch(error => {
+                        res.redirect("/notes");
+                    });
             });
     })
     .delete((req, res) => {
@@ -88,7 +101,13 @@ app.route("/notes")
                 console.log("This error in DELETE /notes...", error);
             })
             .finally(() => {
-                res.redirect("/notes");
+                getNotes()
+                    .then(result => {
+                        res.json(result);
+                    })
+                    .catch(error => {
+                        res.redirect("/notes");
+                    });
             });
     });
 
@@ -161,7 +180,13 @@ app.route("/notes/:noteID")
                         console.log('Error:...', error);
                     })
                     .finally(() => {
-                        res.redirect('/notes');
+                        getNotes()
+                            .then(result => {
+                                res.json(result);
+                            })
+                            .catch(error => {
+                                res.redirect("/notes");
+                            });
                     });
             });
     });
